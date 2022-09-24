@@ -7,7 +7,8 @@ class ProductsController(Resource):
         self.service = ProductService()
     
     def get(self,version):
-        return self.service.get_products()
+
+        return self.service.get_products(request.args)
     
     def post(self,version):
 

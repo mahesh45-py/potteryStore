@@ -1,16 +1,22 @@
-from models.products import ProductCategories
-from database import db
+from models.products import ProductCategories,Product
+from database import db, baseUrl
 from flask import jsonify
 
 class ProductCategoryService():
     def __init__(self):
         self.db = db
     def get_categories(self):
+        data = []
+        for row in ProductCategories.query.all():
+            obj = row.toDict()
+            obj['product_category_image'] = baseUrl+"/files/"+obj["product_category_image"] if obj["product_category_image"] else baseUrl+"/files/no-thumbnail.png"
+            data.append(obj)
         return jsonify({
             'status': True,
             'message': 'Product Categories',
-            'data': [row.toDict() for row in ProductCategories.query.all()] 
+            'data': data
         })
+
     def add_category(self, payload):
         try:
             if not payload.get('name') or not payload.get('image'):

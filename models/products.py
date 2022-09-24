@@ -16,8 +16,7 @@ class Product(db.Model):
     stock = db.Column(db.Integer)
     status = db.Column(db.String(2), default='AC')
     category_id = db.Column(db.Integer,db.ForeignKey('products_categories.product_category_id'),nullable=False)
-    category = db.relationship('ProductCategories',
-        backref=db.backref('Product', lazy=True))
+    category = db.relationship("ProductCategories", back_populates="product", uselist=False)
 
     def __init__(self,  name, price, description, image, stock, status, category_id):
         # self.id = 1
@@ -42,7 +41,7 @@ class ProductCategories(db.Model):
     product_category_name = db.Column(db.String(50))
     product_category_status = db.Column(db.String(2), default='AC')
     product_category_image = db.Column(db.String)
-    
+    product = db.relationship("Product", back_populates="category")
     def __init__(self, product_category_name, product_category_status, product_category_image):
         # self.product_category_id = product_category_id
         self.product_category_name = product_category_name

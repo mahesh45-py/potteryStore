@@ -1,4 +1,4 @@
-from models.products import Product
+from models.products import Product, ProductCategories
 from database import db, baseUrl
 from flask import jsonify
 
@@ -8,11 +8,28 @@ class ProductService():
         self.something = 'nothing'
         self.db = db
     
-    def get_products(self):
+    def get_products(self, params):
+        id = params.get('id')
+        category_id = params.get('category_id')
         data = []
-        for row in Product.query.all():
+        
+        query= Product.query
+        if id:
+            query=query\
+            .filter_by(id=id)
+        if category_id:
+            query=query\
+            .filter_by(category_id=category_id)
+        result = query\
+            .join(ProductCategories, Product.category_id==ProductCategories.product_category_id)\
+            .all()
+
+        for row in result:
+            
             obj = row.toDict()
             obj['image'] = baseUrl+"/files/"+obj["image"] if obj["image"] else baseUrl+"/files/no-thumbnail.png"
+            obj['category'] = row.category.toDict()
+            obj['category']['product_category_image'] = baseUrl+"/files/"+obj['category']["product_category_image"] if obj['category']["product_category_image"] else baseUrl+"/files/no-thumbnail.png"
             data.append(obj)
         return jsonify({
             'status': True,
