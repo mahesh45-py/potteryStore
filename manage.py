@@ -76,4 +76,5 @@ def create_table():
 def method_name():
     return 'FUCK'
 
-app.run(debug=True,port=8080)
+# app.run(debug=True,port=8080)
+app.run(debug=False,host='0.0.0.0')
