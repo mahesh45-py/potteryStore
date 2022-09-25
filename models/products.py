@@ -41,12 +41,14 @@ class ProductCategories(db.Model):
     product_category_name = db.Column(db.String(50))
     product_category_status = db.Column(db.String(2), default='AC')
     product_category_image = db.Column(db.String)
+    product_category_description = db.Column(db.String)
     product = db.relationship("Product", back_populates="category")
-    def __init__(self, product_category_name, product_category_status, product_category_image):
+    def __init__(self, product_category_name, product_category_status, product_category_image, product_category_description):
         # self.product_category_id = product_category_id
         self.product_category_name = product_category_name
         self.product_category_status = product_category_status
         self.product_category_image = product_category_image
+        self.product_category_description = product_category_description
     
     def __repr__(self):
         return f'{self.product_category_name} : {self.product_category_id}'

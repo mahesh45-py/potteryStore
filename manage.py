@@ -1,12 +1,15 @@
 import os
 from flask import Flask, url_for, request, jsonify
-from database import db
+from database import db, migrate
 from api import api_bp
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import form
 from jinja2.utils import markupsafe 
 from models.products import Product, ProductCategories
+from models.banners import Banners
+
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 file_path = os.path.join(basedir, 'files')
@@ -14,12 +17,14 @@ database_path = os.path.join(basedir, 'data-dev.sqlite')
 
 app = Flask(__name__, static_folder='files')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///toystore.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = '@Mahesh2085'
 app.config['SESSION_TYPE'] = 'filesystem'
 
 db.init_app(app)
+migrate.init_app(app,db)
 admin = Admin(app)
+
 
 class ProductImageView(ModelView):
     def _list_thumbnail(view, context, model, name):
@@ -60,10 +65,29 @@ class CategoriesImageView(ModelView):
             'ProductCategories', base_path=file_path, thumbnail_size=(100, 100, True))
     }
 
+class BannerImageView(ModelView):
+    def _list_thumbnail(view, context, model, name):
+        if not model.image:
+            return ''
+
+        return markupsafe.Markup(
+            '<img src="%s">' %
+            url_for('static',
+                    filename=form.thumbgen_filename(model.image))
+        )
+
+    column_formatters = {
+        'image': _list_thumbnail
+    }
+
+    form_extra_fields = {
+        'image': form.ImageUploadField(
+            'Banners', base_path=file_path, thumbnail_size=(100, 100, True))
+    }
 
 admin.add_view(ProductImageView(Product,db.session))
 admin.add_view(CategoriesImageView(ProductCategories,db.session))
-
+admin.add_view(BannerImageView(Banners,db.session))
 app.register_blueprint(api_bp)
 
 
@@ -77,4 +101,5 @@ def method_name():
     return 'FUCK'
 
 # app.run(debug=True,port=8080)
-app.run(debug=False,host='0.0.0.0')
+if __name__ == '__main__':
+    app.run(debug=True,host='0.0.0.0')
