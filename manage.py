@@ -1,6 +1,6 @@
 import os
 from flask import Flask, url_for, request, jsonify
-from database import db, migrate
+from database import db, migrate, mail
 from api import api_bp
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -20,9 +20,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///toystore.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = '@Mahesh2085'
 app.config['SESSION_TYPE'] = 'filesystem'
+app.config['MAIL_SERVER']='smtp-relay.sendinblue.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = 'srikakulammahesh2085@gmail.com'
+app.config['MAIL_DEFAULT_SENDER'] = 'srikakulammahesh2085@gmail.com'
+app.config['MAIL_PASSWORD'] = '7gr0CEHvW4Uqnhk6'
+# app.config['MAIL_USE_TLS'] = False
+# app.config['MAIL_USE_SSL'] = True
 
 db.init_app(app)
 migrate.init_app(app,db)
+mail.init_app(app)
 admin = Admin(app)
 
 
@@ -102,4 +110,4 @@ def method_name():
 
 # app.run(debug=True,port=8080)
 if __name__ == '__main__':
-    app.run(debug=False,host='0.0.0.0')
+    app.run(debug=True,host='0.0.0.0')
