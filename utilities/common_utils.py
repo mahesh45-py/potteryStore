@@ -2,10 +2,12 @@ from database import mail
 from flask_mail import Message
 from datetime import datetime
 import pytz
+from logging import getLogger
 
 class CommonUtils():
     def __init__(self):
         self.name = 'Mahesh'
+        self.log = getLogger()
 
     #=======================================================================================================
     #    Send Mail with provided info
@@ -17,6 +19,7 @@ class CommonUtils():
             mail.send(msg)
             return True
         except Exception as err:
+            self.log.error("common_utils sendMail exception : ", str(err))
             print(err)
             return False
 

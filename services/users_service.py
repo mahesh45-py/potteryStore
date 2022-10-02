@@ -6,12 +6,14 @@ import pytz
 from utilities.common_utils import CommonUtils
 import random
 import jwt
+from logging import getLogger
 
 class UsersService():
     def __init__(self):
         
         self.db = db
         self.utility = CommonUtils()
+        self.log = getLogger()
     
 
     def create_user(self, payload):
@@ -57,6 +59,7 @@ class UsersService():
             })
             
         except Exception as err:
+            self.log.error("users_service create_user exception: " + str(err))
             return jsonify({
                 'status': False,
                 'message': 'Unable to create account',
