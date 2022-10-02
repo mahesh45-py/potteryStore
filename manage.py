@@ -8,7 +8,7 @@ from flask_admin import form
 from jinja2.utils import markupsafe 
 from models.products import Product, ProductCategories
 from models.banners import Banners
-
+import logging.handlers
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -108,6 +108,18 @@ def create_table():
 def method_name():
     return 'FUCK'
 
+def setup_logger():
+    root = logging.getLogger()
+    root.setLevel(logging.INFO)
+    
+    file_name = os.path.join("log", 'POTTERY_STORE_{}.log'.format("api_log"))
+    file_handler = logging.handlers.TimedRotatingFileHandler(file_name, when='d', backupCount=7)
+    
+    root.addHandler(file_handler)
+
+
+setup_logger()
+
 # app.run(debug=True,port=8080)
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0')
+    app.run(debug=False,host='0.0.0.0')
