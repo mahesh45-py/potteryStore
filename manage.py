@@ -1,15 +1,15 @@
-import os
-from flask import Flask, url_for, request, jsonify
-from database import db, migrate, mail
-from api import api_bp
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from flask_admin import form
-from jinja2.utils import markupsafe 
-from models.products import Product, ProductCategories
-from models.banners import Banners
 import logging.handlers
+import os
 
+from flask import Flask, jsonify, request, url_for
+from flask_admin import Admin, form
+from flask_admin.contrib.sqla import ModelView
+from jinja2.utils import markupsafe
+
+from api import api_bp
+from database import db, mail, migrate
+from models.banners import Banners
+from models.products import Product, ProductCategories
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 file_path = os.path.join(basedir, 'files')
@@ -20,13 +20,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///toystore.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = '@Mahesh2085'
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['MAIL_SERVER']='smtp-relay.sendinblue.com'
+app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USERNAME'] = 'srikakulammahesh2085@gmail.com'
 app.config['MAIL_DEFAULT_SENDER'] = 'srikakulammahesh2085@gmail.com'
-app.config['MAIL_PASSWORD'] = '7gr0CEHvW4Uqnhk6'
-# app.config['MAIL_USE_TLS'] = False
-# app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_PASSWORD'] = 'lhtlnrbkmenpgdcd'
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
 
 db.init_app(app)
 migrate.init_app(app,db)
@@ -122,4 +122,4 @@ setup_logger()
 
 # app.run(debug=True,port=8080)
 if __name__ == '__main__':
-    app.run(debug=False,host='0.0.0.0')
+    app.run(debug=True,host='0.0.0.0')

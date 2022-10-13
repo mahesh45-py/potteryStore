@@ -1,5 +1,6 @@
-from database import db
 from sqlalchemy import inspect
+
+from database import db
 
 
 class Users(db.Model):

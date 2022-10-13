@@ -1,12 +1,15 @@
-from models.users import Users, UserOTPs
-from database import db, baseUrl
-from flask import jsonify, render_template, current_app
-from datetime import datetime
-import pytz
-from utilities.common_utils import CommonUtils
 import random
-import jwt
+from datetime import datetime
 from logging import getLogger
+
+import jwt
+import pytz
+from flask import current_app, jsonify, render_template
+
+from database import baseUrl, db
+from models.users import UserOTPs, Users
+from utilities.common_utils import CommonUtils
+
 
 class UsersService():
     def __init__(self):
@@ -38,19 +41,22 @@ class UsersService():
 
             user = Users(first_name=payload.get('first_name'), last_name=payload.get('last_name'), photo=payload.get('photo') if payload.get('photo') else '',gender=payload.get('gender'),  email=payload.get('email'), phone=payload.get('phone'), password=payload.get('password'), created_on=self.utility.getCurrentDateTime(), last_login = self.utility.getCurrentDateTime(), status='NV')
             self.db.session.add(user)
-            self.db.session.commit()
+            
 
             otp = random.randint(111111,999999)
-            user_otp = UserOTPs(otp = otp, created_on =self.utility.getCurrentDateTime(), user_id = user.id )
-            self.db.session.add(user_otp)
+            
             
 
             html = render_template("email_otp.html", otp=otp)
             if not self.utility.sendMail(subject='One Time Password for Account Creation', html=html, recipients=[payload.get('email')]):
+                self.db.session.rollback()
                 return jsonify({
                     'status': False,
                     'message': 'Unable to send Email'
                 })
+            self.db.session.commit()
+            user_otp = UserOTPs(otp = otp, created_on =self.utility.getCurrentDateTime(), user_id = user.id )
+            self.db.session.add(user_otp)
             self.db.session.commit()
             return jsonify({
                 'status': True,
@@ -59,6 +65,7 @@ class UsersService():
             })
             
         except Exception as err:
+            self.db.session.rollback()
             self.log.error("users_service create_user exception: " + str(err))
             return jsonify({
                 'status': False,
