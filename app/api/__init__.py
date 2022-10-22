@@ -1,9 +1,9 @@
 from flask import Blueprint
 from flask_restful import Resource, Api
-from controllers.products_controller import ProductsController
-from controllers.products_categories_controller import ProductsCategoriesController
-from controllers.banners_controller import BannersController
-from controllers.users_controller import UsersController
+from app.controllers.products_controller import ProductsController
+from app.controllers.products_categories_controller import ProductsCategoriesController
+from app.controllers.banners_controller import BannersController
+from app.controllers.users_controller import UsersController
 api_bp = Blueprint('api',__name__,url_prefix='/api/<version>')
 
 api = Api(api_bp)

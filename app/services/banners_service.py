@@ -1,6 +1,7 @@
-from models.banners import Banners
-from database import baseUrl
 from flask import jsonify
+
+from app.database import baseUrl
+from app.models.banners import Banners
 
 
 class BannersService():

@@ -3,12 +3,11 @@ from datetime import datetime
 from logging import getLogger
 
 import jwt
-import pytz
 from flask import current_app, jsonify, render_template
 
-from database import baseUrl, db
-from models.users import UserOTPs, Users
-from utilities.common_utils import CommonUtils
+from app.database import baseUrl, db
+from app.models.users import UserOTPs, Users
+from app.utilities.common_utils import CommonUtils
 
 
 class UsersService():
@@ -74,6 +73,7 @@ class UsersService():
             })
     def update(self, payload, current_user):
         try:
+            print(payload)
             user = Users.query.filter_by(id = current_user['id']).first()
             first_name = payload.get('first_name')
             last_name = payload.get('last_name')
@@ -123,11 +123,15 @@ class UsersService():
                 })
             user.last_login = self.utility.getCurrentDateTime()
             user_data = user.toDict()
+
+            
+
             
             if user_data['status'] != 'AC':
                 return jsonify({
                     'status': False,
-                    'message': 'Your Account is not Verified'
+                    'message': 'Your Account is not Verified',
+                    'lastId': user_data['id']
                 })
             
             
@@ -182,6 +186,32 @@ class UsersService():
             return jsonify({
                 'status': False,
                 'message': 'Unable to Verify OTP',
+                'error': str(err)
+            })
+    def resend_otp(self, payload):
+        try:
+            
+            user_id = payload.get('user_id')
+            user_otp = UserOTPs.query.filter_by(user_id=user_id).first()
+            user = Users.query.filter_by(id=user_id).first()
+            html = render_template("email_otp.html", otp=user_otp.otp)
+            if not self.utility.sendMail(subject='One Time Password for Account Creation', html=html, recipients=[user.email]):
+                
+                return jsonify({
+                    'status': False,
+                    'message': 'Unable to send Email'
+                })
+            
+            return jsonify({
+                    'status': True,
+                    'message': 'OTP Sent Successful'
+                })
+
+        except Exception as err:
+            print(err)
+            return jsonify({
+                'status': False,
+                'message': 'Unable to Re-Send OTP',
                 'error': str(err)
             })
 

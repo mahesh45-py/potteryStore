@@ -1,6 +1,9 @@
 from flask import request
 from flask_restful import Resource
-from services.products_service import ProductService
+
+from app.services.products_service import ProductService
+
+
 class ProductsController(Resource):
     def __init__(self):
         self.name = 'Mahesh'

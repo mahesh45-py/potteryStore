@@ -1,5 +1,6 @@
-from database import db
 from sqlalchemy import inspect
+
+from app.database import db
 
 categories = db.Table('categories',
     db.Column('category_id', db.Integer, db.ForeignKey('products_categories.product_category_id'), primary_key=True),

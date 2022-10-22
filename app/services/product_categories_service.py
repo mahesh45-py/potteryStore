@@ -1,6 +1,8 @@
-from models.products import ProductCategories,Product
-from database import db, baseUrl
 from flask import jsonify
+
+from app.database import baseUrl, db
+from app.models.products import Product, ProductCategories
+
 
 class ProductCategoryService():
     def __init__(self):

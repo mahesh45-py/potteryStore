@@ -4,7 +4,7 @@ from logging import getLogger
 import pytz
 from flask_mail import Message
 
-from database import mail
+from app.database import mail
 
 
 class CommonUtils():
@@ -18,9 +18,9 @@ class CommonUtils():
     def sendMail(self, subject, html, recipients):
         try:
             
-            msg = Message(subject=subject, html=html, recipients=recipients)
+            # msg = Message(subject=subject, html=html, recipients=recipients)
             # mail.connect()
-            mail.send(msg)
+            # mail.send(msg)
             return True
         except Exception as err:
             self.log.error("common_utils sendMail exception : "+ str(err))

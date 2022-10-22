@@ -1,6 +1,6 @@
 from sqlalchemy import inspect
 
-from database import db
+from app.database import db
 
 
 class Users(db.Model):

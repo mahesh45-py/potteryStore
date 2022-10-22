@@ -6,10 +6,10 @@ from flask_admin import Admin, form
 from flask_admin.contrib.sqla import ModelView
 from jinja2.utils import markupsafe
 
-from api import api_bp
-from database import db, mail, migrate
-from models.banners import Banners
-from models.products import Product, ProductCategories
+from app.api import api_bp
+from app.database import db, mail, migrate
+from app.models.banners import Banners
+from app.models.products import Product, ProductCategories
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 file_path = os.path.join(basedir, 'files')
@@ -122,4 +122,4 @@ setup_logger()
 
 # app.run(debug=True,port=8080)
 if __name__ == '__main__':
-    app.run(debug=False,host='0.0.0.0')
+    app.run(debug=True,host='0.0.0.0')

@@ -1,5 +1,7 @@
-from database import db
 from sqlalchemy import inspect
+
+from app.database import db
+
 
 class Banners(db.Model):
     __tablename__ = 'banners'
