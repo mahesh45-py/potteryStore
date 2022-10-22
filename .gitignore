@@ -177,7 +177,6 @@ toystore.db
 .idea/misc.xml
 test.py
 services/__pycache__/products_service.cpython-39.pyc
-/migrations
 /log
 /flask_session
 /files
